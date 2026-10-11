@@ -1,4 +1,4 @@
-const API_URL = `${window.RESEARCHCOPILOT_API_URL || "http://127.0.0.1:8000"}/api/research`;
+const API_URL = "https://researchcopilot-api.onrender.com/api/research";
 const form = document.getElementById("research-form");
 const queryInput = document.getElementById("research-query");
 const researchButton = document.getElementById("research-button");
