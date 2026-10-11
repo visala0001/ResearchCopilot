@@ -94,6 +94,7 @@ class SearchAgent:
             total_found=len(unique_papers)
         )
 
+
     def research_search(
         self,
         query: str,
@@ -107,27 +108,36 @@ class SearchAgent:
             raise ValueError("top_k must be greater than 0.")
 
         search_queries = self.generate_queries(query)
-        if not search_queries.queries:
-            raise ValueError("No search queries generated from the research question.")
-        all_papers = []
 
-        for search_query in search_queries.queries:
+        # Use only one generated query to reduce API requests.
+        queries = [
+            item.strip()
+            for item in search_queries.queries
+            if item and item.strip()
+        ][:1]
 
-            papers = self.search_tool.search_papers(
-                query=search_query,
-                limit=top_k
-            )
+        # Fall back to the user's original query if Gemini
+        # does not return a usable search query.
+        if not queries:
+            queries = [query.strip()]
 
-            all_papers.extend(papers)
-
-        unique_papers = self._deduplicate_papers(
-            all_papers
+        # Make just one Semantic Scholar search per submission.
+        papers = self.search_tool.search_papers(
+            query=queries[0],
+            limit=top_k
         )
+
+        unique_papers = self._deduplicate_papers(papers)
 
         relevant_papers = self._filter_relevant_papers(
             unique_papers,
             query
         )
+
+        # If strict keyword filtering removes every result,
+        # keep the original search results instead.
+        if not relevant_papers:
+            relevant_papers = unique_papers
 
         ranked_papers = self._rank_papers(
             relevant_papers,
@@ -141,6 +151,7 @@ class SearchAgent:
             papers=final_papers,
             total_found=len(relevant_papers)
         )
+
 
     def _filter_relevant_papers(
         self,

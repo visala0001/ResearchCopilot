@@ -407,6 +407,7 @@ def test_research_search_handles_search_error(monkeypatch):
             top_k=5
         )
 
+
 def test_research_search_empty_generated_queries(monkeypatch):
 
     agent = SearchAgent()
@@ -419,17 +420,34 @@ def test_research_search_empty_generated_queries(monkeypatch):
     def fake_generate_queries(query):
         return empty_queries
 
+    def fake_search_papers(query, limit):
+        return [
+            Paper(
+                paper_id="paper-1",
+                title="Machine Learning Research",
+                abstract="Research about machine learning methods.",
+                authors=["Test Author"],
+                year=2024,
+                venue="Test Conference",
+                url="https://example.com/paper",
+                citation_count=10,
+            )
+        ]
+
     monkeypatch.setattr(
         agent,
         "generate_queries",
         fake_generate_queries
     )
 
-    with pytest.raises(
-        ValueError,
-        match="No search queries generated from the research question."
-    ):
-        agent.research_search(
-            query="machine learning",
-            top_k=5
-        )
+    monkeypatch.setattr(
+        agent.search_tool,
+        "search_papers",
+        fake_search_papers
+    )
+
+    result = agent.research_search("machine learning", top_k=5)
+
+    assert result.query == "machine learning"
+    assert len(result.papers) == 1
+    assert result.papers[0].paper_id == "paper-1"
