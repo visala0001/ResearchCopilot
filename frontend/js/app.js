@@ -1,5 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/api/research";
-
+const API_URL = `${window.RESEARCHCOPILOT_API_URL || "http://127.0.0.1:8000"}/api/research`;
 const form = document.getElementById("research-form");
 const queryInput = document.getElementById("research-query");
 const researchButton = document.getElementById("research-button");
@@ -386,7 +385,7 @@ form.addEventListener("submit", async (event) => {
     } catch (error) {
         errorMessage.textContent =
             error instanceof TypeError
-                ? "Cannot connect to the API. Make sure the backend is running at http://127.0.0.1:8000."
+                ? "Cannot connect to ResearchCopilot. Please try again later."
                 : error.message || "Something went wrong. Please try again.";
 
         errorMessage.classList.remove("hidden");
