@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ResearchCopilot helps you discover, analyze, and summarize academic research papers with AI.">
+    <title>ResearchCopilot | AI Research Assistant</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="#" aria-label="ResearchCopilot home">
+            <span class="brand-icon">R</span>
+            <span>Research<span class="brand-accent">Copilot</span></span>
+        </a>
+        <span class="header-label">AI RESEARCH WORKSPACE</span>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="eyebrow">
+                <span class="status-dot"></span>
+                YOUR AI-POWERED RESEARCH ASSISTANT
+            </div>
+            <h1>Research smarter.<br><span>Discover more.</span></h1>
+            <p class="hero-description">
+                Explore academic research with AI. Find relevant papers,
+                understand their methodologies, and uncover key findings
+                in one place.
+            </p>
+        </section>
+
+        <section class="search-card" aria-labelledby="research-heading">
+            <div class="section-heading">
+                <div>
+                    <h2 id="research-heading">Start your research</h2>
+                    <p>What would you like to investigate today?</p>
+                </div>
+                <span class="step-label">01 / RESEARCH</span>
+            </div>
+
+            <form id="research-form">
+                <label for="research-query">Research question or topic</label>
+                <textarea
+                    id="research-query"
+                    name="query"
+                    rows="4"
+                    maxlength="500"
+                    placeholder="e.g., How are large language models being used in medical diagnosis?"
+                    required
+                ></textarea>
+
+                <div class="form-footer">
+                    <span class="input-hint">Be specific for more relevant results.</span>
+                    <button id="research-button" type="submit">
+                        <span id="button-text">Start research</span>
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </div>
+            </form>
+
+            <div id="loading" class="loading hidden" role="status" aria-live="polite">
+                <div class="spinner"></div>
+                <div>
+                    <strong>Research in progress</strong>
+                    <p id="loading-message">Searching for relevant academic papers...</p>
+                </div>
+            </div>
+
+            <div id="error-message" class="error-message hidden" role="alert"></div>
+        </section>
+
+        <section class="pipeline" aria-label="Five-stage research process">
+            <div class="pipeline-step">
+                <span class="step-number">01</span>
+                <div>
+                    <strong>Search</strong>
+                    <p>Discover relevant papers</p>
+                </div>
+                <span class="pipeline-arrow" aria-hidden="true">→</span>
+            </div>
+
+            <div class="pipeline-step">
+                <span class="step-number">02</span>
+                <div>
+                    <strong>Analyze</strong>
+                    <p>Extract methods and evidence</p>
+                </div>
+                <span class="pipeline-arrow" aria-hidden="true">→</span>
+            </div>
+
+            <div class="pipeline-step">
+                <span class="step-number">03</span>
+                <div>
+                    <strong>Summarize</strong>
+                    <p>Understand key insights</p>
+                </div>
+                <span class="pipeline-arrow" aria-hidden="true">→</span>
+            </div>
+
+            <div class="pipeline-step">
+                <span class="step-number">04</span>
+                <div>
+                    <strong>Critic Review</strong>
+                    <p>Review claims and evidence</p>
+                </div>
+                <span class="pipeline-arrow" aria-hidden="true">→</span>
+            </div>
+
+            <div class="pipeline-step">
+                <span class="step-number">05</span>
+                <div>
+                    <strong>Write Report</strong>
+                    <p>Generate the final report</p>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="results-section" class="results-section hidden" aria-labelledby="results-heading">
+            <div class="results-heading">
+                <div>
+                    <span class="step-label">02 / YOUR RESULTS</span>
+                    <h2 id="results-heading">Research results</h2>
+                    <p id="results-query" class="results-query"></p>
+                </div>
+                <span id="paper-count" class="count-badge">0 papers</span>
+            </div>
+
+            <div class="tabs" role="tablist" aria-label="Research result categories">
+                <button class="tab active" type="button" role="tab" id="tab-papers" aria-selected="true" aria-controls="panel-papers" data-tab="papers">Papers</button>
+
+                <button class="tab" type="button" role="tab"
+                    id="tab-analyses" aria-selected="false" aria-controls="panel-analyses"
+                    data-tab="analyses">Analysis</button>
+
+                <button class="tab" type="button" role="tab"
+                    id="tab-summaries" aria-selected="false" aria-controls="panel-summaries"
+                    data-tab="summaries">Summaries</button>
+
+                <button class="tab" type="button" role="tab"
+                    id="tab-reviews" aria-selected="false" aria-controls="panel-reviews"
+                    data-tab="reviews">Critic Review</button>
+
+                <button class="tab" type="button" role="tab"
+                    id="tab-report" aria-selected="false" aria-controls="panel-report"
+                    data-tab="report">Final Report</button>
+            </div>
+            <div id="panel-papers" class="result-panel" role="tabpanel" aria-labelledby="tab-papers">
+                <div id="papers-list" class="results-list"></div>
+            </div>
+            <div id="panel-analyses" class="result-panel hidden" role="tabpanel" aria-labelledby="tab-analyses">
+                <div id="analyses-list" class="results-list"></div>
+            </div>
+            <div id="panel-summaries" class="result-panel hidden" role="tabpanel" aria-labelledby="tab-summaries">
+                <div id="summaries-list" class="results-list"></div>
+            </div>
+            <div id="panel-reviews" class="result-panel hidden" role="tabpanel" aria-labelledby="tab-reviews">
+                <div id="reviews-list" class="results-list"></div>
+            </div>
+            <div id="panel-report" class="result-panel hidden" role="tabpanel" aria-labelledby="tab-report">
+                <div id="report-content" class="results-list"></div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>ResearchCopilot · AI-assisted research, with evidence at the center.</p>
+            <span>Verify important findings against the original papers.</span>
+        </footer>
+    </main>
+</body>
+</html>
